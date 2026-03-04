@@ -1,40 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>For Priya ✨</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background-color: #f3dfe4;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
         .container {
             background: #ffffff;
             padding: 40px 30px;
             border-radius: 25px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            width: 90%;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
             max-width: 420px;
             text-align: center;
             border: 2px solid #ff9eb5;
+            transition: all 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+            /* hide scrollbar for clean look */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* ✅ FIXED IMAGE STYLE */
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+
         .main-photo {
             width: 220px;
             height: 220px;
             border-radius: 50%;
             object-fit: cover;
-            object-position: center; /* changed from center top */
+            object-position: center;
             border: 6px solid #ff9eb5;
             box-shadow: 0 10px 25px rgba(255, 64, 129, 0.3);
             margin-bottom: 25px;
@@ -67,15 +82,157 @@
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
+            margin-top: 10px;
+            width: 100%;
         }
 
         .btn:hover {
-            transform: scale(1.07);
+            transform: scale(1.03);
             box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
         }
 
         .hidden {
-            display: none;
+            display: none !important;
+        }
+
+        /* Spotify Player Box */
+        .spotify-container {
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Timetable Box */
+        .timetable-container {
+            margin-top: 25px;
+            text-align: left;
+            background: #fff0f3;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #ffc2d1;
+        }
+
+        .timetable-container h2 {
+            font-size: 1.4rem;
+            color: #e91e63;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .timetable-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        /* styling internal scrollbar */
+        .timetable-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .timetable-list::-webkit-scrollbar-thumb {
+            background-color: #ff9eb5;
+            border-radius: 10px;
+        }
+
+        .timetable-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: #fff;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+        }
+
+        .timetable-item .time {
+            font-weight: bold;
+            color: #ff4081;
+            width: 65px;
+        }
+
+        .timetable-item .name {
+            flex-grow: 1;
+            padding-left: 10px;
+            color: #444;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timetable-item .delete {
+            cursor: pointer;
+            color: #ffb3c6;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .timetable-item .delete:hover {
+            color: #ff4081;
+        }
+
+        .add-task-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .add-task-form input {
+            padding: 10px;
+            border: 1px solid #ffc2d1;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .add-task-form input:focus {
+            border-color: #ff4081;
+        }
+
+        .add-task-form input[type="time"] {
+            flex: 1;
+        }
+
+        .add-task-form input[type="text"] {
+            flex: 2;
+        }
+
+        .btn-small {
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: #e91e63;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(233, 30, 99, 0.4);
+            font-weight: bold;
+            transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toast.show {
+            right: 20px;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
         }
 
         @media (max-width: 480px) {
@@ -83,12 +240,25 @@
                 width: 180px;
                 height: 180px;
             }
+
+            .container {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <div class="toast" id="notificationToast">
+        <span class="toast-icon">🛎️</span>
+        <div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Time to study!</div>
+            <div id="toastTask" style="font-size: 1.1rem;">Subject</div>
+        </div>
+    </div>
+
+    <!-- Main Greeting Mode -->
     <div class="container" id="mainBox">
         <img src="p.jpeg" alt="Priya Photo" class="main-photo">
         <h1>Hey Priya! ✨</h1>
@@ -96,18 +266,172 @@
         <button class="btn" onclick="showMessage()">Click here</button>
     </div>
 
+    <!-- Study Mode -->
     <div class="container hidden" id="studyBox">
-        <h1>Ab toh taarif hogai...</h1>
-        <p>Now <strong>Get back to study!</strong> 📚✍️</p>
-        <button class="btn" onclick="location.reload()">Back to cute mode</button>
+        <h1 style="font-size: 2rem;">Now Get Back to Study! 📚</h1>
+        <p style="margin-bottom: 20px;">Focus mode activated ✨</p>
+
+        <!-- Spotify Embed: Lofi Girl chill beats -->
+        <div class="spotify-container">
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4ZsnZ94?utm_source=generator&theme=0"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+        </div>
+
+        <!-- Timetable Section -->
+        <div class="timetable-container">
+            <h2>Study Timetable ⏰</h2>
+            <ul class="timetable-list" id="timetableList">
+                <!-- Items generated by JS -->
+            </ul>
+            <div class="add-task-form">
+                <input type="time" id="taskTime" required>
+                <input type="text" id="taskName" placeholder="Study topic..." required>
+            </div>
+            <button class="btn btn-small" onclick="addTask()">Add Task</button>
+        </div>
+
+        <button class="btn" onclick="location.reload()"
+            style="margin-top: 25px; background: #ccc; box-shadow: none; color: #333;">Be Cute Again 🎀</button>
     </div>
 
     <script>
-        function showMessage() {
-            document.getElementById("mainBox").style.display = "none";
-            document.getElementById("studyBox").style.display = "block";
+        // Default tasks or load from local storage
+        let tasks = JSON.parse(localStorage.getItem('studyTasks')) || [
+            { id: 1, time: "18:00", name: "Mathematics" },
+            { id: 2, time: "20:00", name: "Physics" }
+        ];
+
+        function saveTasks() {
+            localStorage.setItem('studyTasks', JSON.stringify(tasks));
         }
+
+        function showMessage() {
+            document.getElementById("mainBox").classList.add("hidden");
+            document.getElementById("studyBox").classList.remove("hidden");
+
+            // Re-render tasks and request notifications on mode switch
+            renderTasks();
+            if ("Notification" in window && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
+
+        function renderTasks() {
+            const list = document.getElementById("timetableList");
+            list.innerHTML = "";
+
+            // Sort tasks by time
+            const sortedTasks = [...tasks].sort((a, b) => a.time.localeCompare(b.time));
+
+            if (sortedTasks.length === 0) {
+                list.innerHTML = "<p style='text-align:center; color:#888; font-size:0.9rem; margin:10px 0;'>No tasks added yet.<br>Add one below!</p>";
+                return;
+            }
+
+            sortedTasks.forEach((task) => {
+                const li = document.createElement("li");
+                li.className = "timetable-item";
+                li.innerHTML = `
+                    <span class="time">${task.time}</span>
+                    <span class="name">${task.name}</span>
+                    <span class="delete" onclick="removeTask(${task.id})" title="Remove">×</span>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function addTask() {
+            const timeVal = document.getElementById("taskTime").value;
+            const nameVal = document.getElementById("taskName").value.trim();
+
+            if (timeVal && nameVal) {
+                const newTask = {
+                    id: Date.now(),
+                    time: timeVal,
+                    name: nameVal
+                };
+                tasks.push(newTask);
+                saveTasks();
+                renderTasks();
+
+                // Clear inputs
+                document.getElementById("taskTime").value = "";
+                document.getElementById("taskName").value = "";
+            } else {
+                alert("Please enter both a time and a task name!");
+            }
+        }
+
+        function removeTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+
+        // Notification logic
+        let notifiedTimes = {};
+
+        function showToast(taskName) {
+            const toast = document.getElementById("notificationToast");
+            document.getElementById("toastTask").innerText = taskName;
+
+            // Add sound effect if desired, but visual is safe
+            toast.classList.add("show");
+
+            // System notification fallback
+            if ("Notification" in window && Notification.permission === "granted") {
+                try {
+                    new Notification("Study Time! 📚", {
+                        body: "It's time to focus on: " + taskName,
+                        icon: "p.jpeg"
+                    });
+                } catch (e) { console.log(e); }
+            }
+
+            // Hide toast after 6 seconds
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 6000);
+        }
+
+        // Check for alarms every 15 seconds
+        setInterval(() => {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const currentTime = `${hours}:${minutes}`;
+
+            // Reset notified markers for a new day (or if time passed)
+            // Just clearing old entries
+            Object.keys(notifiedTimes).forEach(time => {
+                if (time !== currentTime) {
+                    delete notifiedTimes[time];
+                }
+            });
+
+            tasks.forEach(task => {
+                if (task.time === currentTime && !notifiedTimes[currentTime]) {
+                    showToast(task.name);
+                    notifiedTimes[currentTime] = true;
+                }
+            });
+        }, 15000);
+
+        // Initial setup
+        renderTasks();
+
+        // Listen for Enter key on task name input
+        document.getElementById("taskName").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addTask();
+            }
+        });
     </script>
 
 </body>
+
 </html>
